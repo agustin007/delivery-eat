@@ -1,0 +1,184 @@
+<!-- <h1 class="text-center my-5" style="font-weight: bold !important;">Order Summary</h1> -->
+<div class="row mb-5">
+  <div class="clo-4" style="width: 88%;">
+    <h1 class="text-center" style="font-weight: bold !important;">Order Summary</h1>
+  </div>
+  <div class="clo-4">
+    <button class="btn btn-delivery" (click)="back()" matTooltip="Press here to back to the previus page.">
+      <i class="bi bi-arrow-left-square"></i> Back
+    </button>
+  </div>
+</div>
+
+<table class="table table-striped mt-4">
+
+  <thead class="thead btn-delivery">
+    <tr>
+      <th scope="col">Product</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+
+  <tbody *ngIf="getTotal() != 0">
+    <tr *ngFor="let item of items">
+      <td>{{ item.name }}</td>
+      <td>{{ item.price | currency }}</td>
+    </tr>
+    <tr *ngFor="let shipping of shippingCosts">
+      <td>{{ shipping.name }}</td>
+      <td>{{ shipping.price | currency }}</td>
+    </tr>
+  </tbody>
+
+  <tfoot>
+    <td>Total</td>
+    <td>{{getTotal() | currency}}</td>
+  </tfoot>
+
+</table>
+
+<h2 class="my-5">Fill the form to register your order</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-5 pb-5">
+
+  <div class="my-5">
+    <h3>Shipping address</h3>
+
+    <div class="form-group">
+      <label for="streetlbl">Street</label>
+      <input id="street" type="text" [formControl]="street" class="form-control" [class.is-valid]="!street.invalid && (street.dirty || street.touched)" [class.is-invalid]="street.invalid && (street.dirty || street.touched)">
+      <div class="invalid-feedback"> 
+        {{ (street.errors?.required && "Street  is required.") 
+          || (street.errors?.maxlength && "Street should contain a maximum of 255 characters.") 
+          || (street.errors?.pattern && "We don't accept weird characters on this field.") }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="numberlbl">Street number</label>
+      <input id="number" type="text" [formControl]="number" pattern="\d*" class="form-control" [class.is-valid]="!number.invalid && (number.dirty || number.touched)" [class.is-invalid]="number.invalid && (number.dirty || number.touched)">
+        <div class="invalid-feedback"> 
+          {{ (number.errors?.required && "Street number is required.") 
+            || (number.errors?.maxlength && "Street number should contain a maximum of 10 digits.") 
+            || (number.errors?.pattern && "Please enter only numbers.") }}
+        </div>
+    </div>
+
+    <div class="form-group">
+      <label for="optionalAddresslbl">Apt/Suite/Other (Optional)</label>
+      <input id="optionalAddress" type="text"  [formControl]="optionalAddress" class="form-control" [class.is-valid]="!optionalAddress.invalid && (optionalAddress.dirty || optionalAddress.touched)"  [class.is-invalid]="optionalAddress.invalid && (optionalAddress.dirty || optionalAddress.touched)">
+      <div class="invalid-feedback"> 
+        {{ (optionalAddress.errors?.maxlength && "Optional address should contain a maximum of 255 characters.") }}
+        
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="citylbl">City</label>
+      <select class="form-control" [formControl]="city" [class.is-valid]="!city.invalid && (city.dirty || city.touched)" [class.is-invalid]="city.invalid && (city.dirty || city.touched)">
+        <option [ngValue]="c" *ngFor="let c of cities">
+          {{ c.name }}
+        </option>
+      </select>
+        <div class="invalid-feedback">
+          {{ (city.errors?.required && "City is required") }}
+        </div>
+    </div>
+  </div>
+
+  <div class="my-5">
+
+    <h3>Payment method</h3>
+    <div class="form-group btn-group w-100">
+      <button type="button" class="btn btn-delivery" *ngFor="let mp of method_payments; let i = index" (click)="setNumber(i)">
+        {{ mp.name }}
+      </button>
+    </div>
+  
+    <div *ngIf="paymentMethod == 0">
+
+      <div class="form-group">
+        <label for="ccnumber">Credit card number</label>
+        <input  class="form-control" id="ccnumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX"
+        [formControl]="ccnumber" [class.is-valid]="!ccnumber.invalid && (ccnumber.dirty || ccnumber.touched)" [class.is-invalid]="ccnumber.invalid && (ccnumber.dirty || ccnumber.touched)">
+        <div class="invalid-feedback">
+          {{ (ccnumber.errors?.required && "Credit card number is required") || (ccnumber.errors?.pattern && "Invalid Visa number") }}
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="ccholdername">Cardholder name</label>
+        <input class="form-control" id="ccholdername" oninput="this.value = this.value.toUpperCase()" 
+          type="text" pattern="^((?:[A-Za-z]+ ?){1,3})$" [formControl]="ccholdername" [class.is-valid]="!ccholdername.invalid && (ccholdername.dirty || ccholdername.touched)" [class.is-invalid]="ccholdername.invalid && (ccholdername.dirty || ccholdername.touched)" >
+        <div class="invalid-feedback">
+          {{ (ccholdername.errors?.required && "Cardholder name is required.") 
+                || (ccholdername.errors?.minlength && "Cardholder name should contain at least 3 characters.")
+                || (ccholdername.errors?.maxlength && "Cardholder name should contain a maximum of 26 characters.") 
+                || (ccholdername.errors?.pattern && "Cardholder name should contain only uppercase characters and spaces.") 
+           }}
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="dueDate">Due date</label>
+        <input id="dueDate" type="text" [formControl]="dueDate" class="form-control" placeholder="MM/YYYY" [class.is-valid]="!dueDate.invalid && (dueDate.dirty || dueDate.touched)" [class.is-invalid]="dueDate.invalid && (dueDate.dirty || dueDate.touched)" >
+          <div class="invalid-feedback"> 
+            {{ (dueDate.errors?.required && "Due Date is required.")
+              || (dueDate.errors?.pattern && "Invalid due date.")   }}
+          </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cvc">CVC</label>
+        <input id="cvc" type="text" [formControl]="cvc" class="form-control" pattern="[0-9]{3}"
+        [class.is-invalid]="cvc.invalid && (cvc.dirty || cvc.touched)" [class.is-valid]="!cvc.invalid && (cvc.dirty || cvc.touched)">
+        <div class="invalid-feedback"> 
+          {{ (cvc.errors?.required && "CVC is required.")  
+          || (cvc.errors?.pattern && "Required pattern doesn't match with required syntax.")   }}
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="paymentMethod == 1">
+
+      <div class="form-group">
+        <label for="cashAmount">Amount to pay</label>
+        <input id="cashAmount" type="text" pattern="\d*" class="form-control" [formControl]="amountToPay" [class.is-valid]="!amountToPay.invalid && (amountToPay.dirty || amountToPay.touched)" [class.is-invalid]="amountToPay.invalid && (amountToPay.dirty || amountToPay.touched)" >
+        <div class="invalid-feedback"> 
+          {{ (amountToPay.errors?.maxlength && "Field should contain a maximum of 12 digits.") 
+              || (amountToPay.errors?.pattern && "Please enter only numbers.") }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-5">
+    <h3>Shipping date</h3>
+
+    <div class="form-check">
+        <input class="form-check-input" (click)="definedDate(0)" type="radio" name="shippingDate" id="soon" checked>
+        <label class="form-check-label" for="soon">As soon as possible</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input"  (click)="definedDate(1)"type="radio" name="shippingDate" id="definedDate" >
+        <label class="form-check-label" for="definedDate">Defined date</label>
+      </div>
+
+    <div *ngIf="shippingDateForm == 1">
+
+      <div class="form-group">
+        <label for="shippingdatelbl">Shipping Date</label>
+        <input  type="datetime-local" [formControl]="shippingDate" class="form-control" [class.is-invalid]="shippingDate.invalid && (shippingDate.dirty || shippingDate.touched)">
+        <div class="invalid-feedback"> 
+          {{ (shippingDate.errors?.required && "Shipping date is required.")  }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-delivery btn-block mt-4" [disabled]="!form.valid" >Place Order</button>
+
+</form>

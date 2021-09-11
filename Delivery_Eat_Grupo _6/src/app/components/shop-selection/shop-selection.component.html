@@ -1,0 +1,83 @@
+<div *ngIf="!shops">
+  <div class="text-center my-5">
+    <div class="spinner-grow" style="width: 7rem; height: 7rem;" role="status">
+     <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+
+<h1 class="text-center my-5" style="font-weight: bold !important;">Shops</h1>
+
+<!-- Options -->
+<div class="row" *ngIf="shops">
+  <button class="btn btn-delivery" (click)="addShop()" style="margin-right: 2rem;" matTooltip="Press here add one shop more.">
+    <i class="bi bi-plus-circle-fill"></i> Add Shop
+  </button>
+  <button class="btn btn-delivery" (click)="retrieveShops()" matTooltip="Press here for consult the shops added.">
+    <i class="bi bi-search"></i> Consult Shops
+  </button>
+  <p class="pl-5 pr-5 pt-2 fs-16 text-option">Option selected: {{this.opcion}}</p>
+</div>
+
+<!-- Registrer of new shop -->
+<div class="row mt-4" *ngIf="this.opcion == 'Add'">
+  <div class="card w-100">
+    <div class="card-body">
+      <form #shopsForm="ngForm" (ngSubmit)=onSubmit(shopsForm)>
+        <p>Shop</p>
+        <div class="form-group">
+          <input type="text" class="form-control" name="id" #id="ngModel" [(ngModel)]="shopService.shopSelected.id" placeholder="Id" >
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="name" #name="ngModel" [(ngModel)]="shopService.shopSelected.name" placeholder="Name">        
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="address" #address="ngModel" [(ngModel)]="shopService.shopSelected.address" placeholder="Addres">        
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="city" #city="ngModel" [(ngModel)]="shopService.shopSelected.city" placeholder="City">        
+        </div>
+        <div class="form-group">
+          <button class="btn btn-delivery mr-4" type="submit">
+            Accept
+          </button>
+          <button class="btn btn-delivery" type="reset">
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>  
+  </div>
+</div>
+
+<!-- List of shops -->
+<table class="table mt-4" *ngIf="this.opcion == 'Consult'">
+	<thead>
+		<tr>
+			<th scope="col">Id</th>
+			<th scope="col">Name</th>
+			<th scope="col">Address</th>
+			<th scope="row">City</th>
+			<th scope="row">View</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let shop of shops; let i = index">
+			<td>{{shop.id}}</td>
+			<td>{{shop.name}}</td>
+			<td>{{shop.address}}</td>
+			<td>{{shop.city}}</td>
+			<td>
+        <button class="btn btn-delivery" (click)="shopSelected(shop)" matTooltip="Press here for see the products of the shop.">
+          <i class="bi bi-eye-fill"></i>
+        </button>
+      </td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- <div  *ngFor="let shop of shops">
+  <button class="btn btn-charcoal my-2 w-100 " (click)="shopSelected(shop)">{{ shop.name }}</button>
+</div> -->
+
+
