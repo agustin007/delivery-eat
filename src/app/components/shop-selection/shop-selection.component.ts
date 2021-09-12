@@ -32,7 +32,9 @@ export class ShopSelectionComponent implements OnInit {
 
   onSubmit(shopsForm:NgForm){
     this.shopService.create(shopsForm.value);    
-    this.snackBar.open('Registration was successfully registred.')
+    this.snackBar.open('Registration was successfully registred.', 'Cerrar',{
+      duration: 3000
+    })
     shopsForm.reset();
     this.opcion = 'Consult';
   }

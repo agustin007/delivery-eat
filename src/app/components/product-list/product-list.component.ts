@@ -37,7 +37,9 @@ export class ProductListComponent  {
 
   onSubmit(productsForm:NgForm){
     this.productService.create(productsForm.value);    
-    this.snackBar.open('Registration was successfully registred.')
+    this.snackBar.open('Registration was successfully registred.', 'Cerrar',{
+      duration: 3000
+    })
     productsForm.reset();
     this.opcion = 'Consult';
   }
@@ -60,17 +62,16 @@ export class ProductListComponent  {
       this.products = data;
       var items:Product[]  = this.cartService.getItems();
 
-      if(items.length >= 0){
-        items.forEach(item =>{
-          this.products.forEach(product =>{
-            if(item.id == product.id){
-              this.products.splice(parseInt(product.id)-1, 1);
-            }
-          })
-        })
-      }  
+      // if(items.length >= 0){
+      //   items.forEach(item =>{
+      //     this.products.forEach(product =>{
+      //       if(item.id == product.id){
+      //         this.products.splice(parseInt(product.id)-1, 1);
+      //       }
+      //     })
+      //   })
+      // }  
     });
-    console.log(this.products);
   }
 
 
@@ -81,13 +82,13 @@ export class ProductListComponent  {
     }
     else {
       this.cartService.addToCart(product);
-      var index = 0;
-      for (var i = 1; i < this.products.length; i++) {
-        if(product.id == this.products[i].id){
-          index = i;
-        }
-      }
-      this.products.splice(index, 1);
+      // var index = 0;
+      // for (var i = 1; i < this.products.length; i++) {
+      //   if(product.id == this.products[i].id){
+      //     index = i;
+      //   }
+      // }
+      // this.products.splice(index, 1);
       window.alert('Your product has been added to the cart!');
     }
   }
