@@ -2,10 +2,10 @@
 
 
 
-###Deploy Status  [![Netlify Status](https://api.netlify.com/api/v1/badges/0a88b2cb-f651-43fc-87d8-fd9483ee62a4/deploy-status)](https://delivereat.netlify.app)
+###Deploy Status  [![Netlify Status](https://api.netlify.com/api/v1/badges/9a6cc558-75e1-4815-b140-0c0a45faef8c/deploy-status)](https://app.netlify.com/sites/delivery-eat-grupo-6/deploys)
 ###[WebPage DeliverEat][id/name]
 
-[id/name]: https://delivereat.netlify.app//
+[id/name]: https://delivery-eat-grupo-6.netlify.app/
 # 
 # 
 
